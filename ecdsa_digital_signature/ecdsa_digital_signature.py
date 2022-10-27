@@ -1,44 +1,29 @@
-from ecdsa import SigningKey, VerifyingKey, BadSignatureError
-from ecdsa.curves import NIST256p
+from ecdsa import VerifyingKey, BadSignatureError
 from hashlib import sha256
 import click
 
 
-# vk = VerifyingKey.from_pem(open("pubk.pem").read(), hashfunc=sha256)
-# with open("secret.txt", "r") as f:
-#     data = bytes(f.read())
-# with open("secret.sign", "rb") as f:
-#     signature = f.read()
-# try:
-#     vk.verify(signature, data)
-#     print("good signature")
-# except BadSignatureError:
-#     print("BAD SIGNATURE")
-
-def create_keys():
-    sk = SigningKey.generate(curve=NIST256p, hashfunc=sha256)
-    vk = sk.verifying_key
-    with open("private.pem", "wb") as f:
-        f.write(sk.to_pem())
-    with open("public.pem", "wb") as f:
-        f.write(vk.to_pem())
+def check_signature(filename: str, signature: str, key: str) -> str:
+    vk = VerifyingKey.from_pem(open(key).read(), hashfunc=sha256)
+    with open(filename, "rb") as f:
+        message = f.read()
+    with open(signature, "rb") as f:
+        sig = f.read()
+    try:
+        vk.verify(sig, message)
+        return "VALID"
+    except BadSignatureError:
+        return "INVALID"
 
 
-with open("private.pem") as f:
-    sk = SigningKey.from_pem(f.read())
-with open("message", "rb") as f:
-    message = f.read()
-sig = sk.sign(message)
-with open("signature", "wb") as f:
-    f.write(sig)
+@click.command()
+@click.option('--f', prompt='Filename', help='--f <FILENAME> -- filename of a signed file')
+@click.option('--s', prompt='Signature', help="--s <SIGNATURE> -- filename of a file with signature")
+@click.option('--k', prompt='Key', help="--k <KEY> -- filename of a public key")
+def script(f, s, k):
+    answer = check_signature(f, s, k)
+    click.echo(answer)
 
-vk = VerifyingKey.from_pem(open("public.pem").read())
-with open("message", "rb") as f:
-    message = f.read()
-with open("signature", "rb") as f:
-    sig = f.read()
-try:
-    vk.verify(sig, message)
-    print("good signature")
-except BadSignatureError:
-    print("BAD SIGNATURE")
+
+if __name__ == '__main__':
+    script()
