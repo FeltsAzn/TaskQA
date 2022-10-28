@@ -52,3 +52,8 @@ def check_signature():
         return True
     except InvalidSignature:
         return False
+
+
+create_keys()
+create_signature(private_key)
+check_signature()

@@ -34,7 +34,7 @@ async def get_signature_of_file(file: UploadFile) -> FileResponse:
 @router.post("/verify", description="first: file, second: digital signature")
 async def check_digital_signature(files: list[UploadFile]) -> dict:
     """Handler for verifying the digital signature of a file"""
-    if len(files) > 2:
+    if len(files) > 2 or len(files) < 2:
         raise HTTPException(status_code=422, detail='The number of uploaded files is more than 2. '
                                                     'You need to send a file and its digital signature')
     file, signature = files
