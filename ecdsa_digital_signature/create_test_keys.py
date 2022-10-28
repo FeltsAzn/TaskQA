@@ -3,6 +3,7 @@ from ecdsa.curves import NIST256p
 from hashlib import sha256
 
 
+
 def create_keys():
     sk = SigningKey.generate(curve=NIST256p, hashfunc=sha256)
     vk = sk.verifying_key
@@ -14,7 +15,7 @@ def create_keys():
 
 def create_signature():
     with open("private.pem") as f:
-        sk = SigningKey.from_pem(f.read())
+        sk = SigningKey.from_pem(f.read(), hashfunc=sha256)
     with open("secret.txt", "rb") as f:
         message = f.read()
     sig = sk.sign(message)
@@ -23,7 +24,7 @@ def create_signature():
 
 
 def check_signature():
-    vk = VerifyingKey.from_pem(open("public.pem").read())
+    vk = VerifyingKey.from_pem(open("public.pem").read(), hashfunc=sha256)
     with open("secret.txt", "rb") as f:
         message = f.read()
     with open("secret.sign", "rb") as f:
