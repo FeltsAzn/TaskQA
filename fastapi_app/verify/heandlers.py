@@ -11,12 +11,13 @@ router = APIRouter()
 
 
 def remove_files(path: str) -> None:
-    """Delete FILE.sign in directory"""
+    """Delete signature FILE.sign in directory(temporary_files dir)"""
     os.remove(path)
 
 
 @router.post("/sign")
-async def get_public_key(file: UploadFile) -> FileResponse:
+async def get_signature_of_file(file: UploadFile) -> FileResponse:
+    """Handler for presenting a server-signed file to the user"""
     filename = file.filename.split('.')[0]
     path = utils.asymmetric_encryption(file.file, filename=filename)
 
@@ -32,6 +33,7 @@ async def get_public_key(file: UploadFile) -> FileResponse:
 
 @router.post("/verify", description="first: file, second: digital signature")
 async def check_digital_signature(files: list[UploadFile]) -> dict:
+    """Handler for verifying the digital signature of a file"""
     if len(files) > 2:
         raise HTTPException(status_code=422, detail='The number of uploaded files is more than 2. '
                                                     'You need to send a file and its digital signature')

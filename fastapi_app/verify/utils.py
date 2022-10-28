@@ -3,14 +3,22 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import serialization
 from cryptography.exceptions import InvalidSignature
 import os
-import dotenv
+from dotenv import load_dotenv
 
-dotenv.load_dotenv()
-password_from_env = os.getenv("PASSWORD_FOR_PRIVATE_KEY")
-password = bytes(password_from_env, "utf-8")
+
+dotenv_path = os.path.join(os.path.dirname(__file__), 'security/.env')
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
+password = bytes(os.getenv("PASSWORD_FOR_PRIVATE_KEY"), "utf-8")
 
 
 def asymmetric_encryption(file, filename: str) -> str:
+    """
+    Function for check digital signature
+    :param file: File data submitted by the user
+    :type file: SpooledTemporaryFile
+    :param filename: The name of the file to save its signature to disk
+    """
     with open("verify/security/private.pem", 'rb') as private_key:
         serialized_private = private_key.read()
     loaded_private_key = serialization.load_pem_private_key(serialized_private,
