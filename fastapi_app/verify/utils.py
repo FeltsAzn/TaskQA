@@ -1,28 +1,31 @@
-from ecdsa import SigningKey, VerifyingKey, BadSignatureError
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives import serialization
+from cryptography.exceptions import InvalidSignature
 import os
+import dotenv
+
+dotenv.load_dotenv()
+password_from_env = os.getenv("PASSWORD_FOR_PRIVATE_KEY")
+password = bytes(password_from_env, "utf-8")
 
 
 def asymmetric_encryption(file, filename: str) -> str:
-    """
-    Function for signing a file
-    :param file: File data submitted by the user
-    :type file: SpooledTemporaryFile
-    :param filename: Filename of submitted file by user
-    """
-    print(type(file))
-    with open("verify/security/private.pem") as f:
-        sk = SigningKey.from_pem(f.read())
+    with open("verify/security/private.pem", 'rb') as private_key:
+        serialized_private = private_key.read()
+    loaded_private_key = serialization.load_pem_private_key(serialized_private,
+                                                            password=password)
     with open(f'temporary_files/{filename}.sign', "wb") as uploaded_file:
         message = file.read()
 
-        sig = sk.sign(message)
-        uploaded_file.write(sig)
+        signature = loaded_private_key.sign(message, ec.ECDSA(hashes.SHA256()))
+        uploaded_file.write(signature)
     file.close()
     path = os.path.abspath(f'temporary_files') + f'/{filename}.sign'
     return path
 
 
-async def signature_validator(file, signature) -> bool:
+async def signature_validator(file, signature,) -> bool:
     """
     Function for check digital signature
     :param file: File data submitted by the user
@@ -30,11 +33,16 @@ async def signature_validator(file, signature) -> bool:
     :param signature: Digital signature submitted by user
     :type signature: SpooledTemporaryFile
     """
-    vk = VerifyingKey.from_pem(open("verify/security/public.pem").read())
     message = await file.read()
     sig = await signature.read()
+
+    with open(f"verify/security/public.pem", 'rb') as file:
+        serialized_public = file.read()
+    loaded_public_key = serialization.load_pem_public_key(serialized_public)
     try:
-        vk.verify(sig, message)
+        loaded_public_key.verify(signature=sig,
+                                 data=message,
+                                 signature_algorithm=ec.ECDSA(hashes.SHA256()))
         return True
-    except BadSignatureError:
+    except InvalidSignature:
         return False

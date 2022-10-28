@@ -49,12 +49,6 @@ def check_signature():
         loaded_public_key.verify(signature=signature,
                                  data=message,
                                  signature_algorithm=ec.ECDSA(hashes.SHA256()))
-        print(True)
+        return True
     except InvalidSignature:
-        print(False)
-
-
-if __name__ == '__main__':
-    private_key = create_keys()
-    create_signature(private_key)
-    check_signature()
+        return False
