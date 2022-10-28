@@ -1,28 +1,36 @@
-from ecdsa import VerifyingKey, BadSignatureError, NIST256p, ECDH
-from hashlib import sha256
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives import serialization
+from cryptography.exceptions import InvalidSignature
 import click
 
 
 def check_signature(filename: str, signature: str, key: str) -> bool:
     """
-    Script for checking the digital signature of a file
-    :param filename: Original file
-    :param signature: Digital signature for this file
-    :param key: Public key to decrypt the signature
+    Function for verifying the digital signature of a file using a public key
+    :param filename: the name of the source file to search in the task folder
+    :param signature: signed file with private key
+    :param key: public key to verify correct verification
     """
-    vk = VerifyingKey.from_pem(open(key).read(), hashfunc=sha256)
-    with open(filename, "rb") as f:
-        message = f.read()
-    with open(signature, "rb") as f:
-        sig = f.read()
+    with open(f'task/{filename}', 'rb') as file:
+        message = file.read()
+
+    with open(f'task/{signature}', 'rb') as file:
+        sig = file.read()
+
+    with open(f'task/{key}', 'rb') as file:
+        serialized_public = file.read()
+    loaded_public_key = serialization.load_pem_public_key(serialized_public)
     try:
-        vk.verify(sig, message, hashfunc=sha256)
+        loaded_public_key.verify(signature=sig,
+                                 data=message,
+                                 signature_algorithm=ec.ECDSA(hashes.SHA256()))
         return True
-    except BadSignatureError:
+    except InvalidSignature:
         return False
 
 
-# Heandler for
+# Heandler for flags
 @click.command()
 @click.option('--f', prompt='Filename', help='--f <FILENAME> -- filename of a signed file')
 @click.option('--s', prompt='Signature', help="--s <SIGNATURE> -- filename of a file with signature")
@@ -35,5 +43,3 @@ def script(f: str, s: str, k: str) -> None:
 if __name__ == '__main__':
     # start script
     script()
-
-
