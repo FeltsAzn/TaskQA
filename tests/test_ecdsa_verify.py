@@ -1,38 +1,38 @@
 from signature_script.ecdsa_digital_signature import check_signature
-from tests.testcase.create_testcase import create_test_keys, create_test_signature
+from tests.create_testcase import create_test_keys, create_test_signature
 import pytest
 
 
-create_test_keys()
-create_test_signature()
+create_test_keys("testcase_script")
+create_test_signature("testcase_script")
 
 
-test_data = [("testcase/test_secret.txt",
-              "testcase/test_secret.sign",
-              "testcase/test_public.pem", True),
+test_data = [("testcase_script/test_secret.txt",
+              "testcase_script/test_secret.sign",
+              "testcase_script/test_public.pem", True),
 
-             ("testcase/test_secret.txt",
-              "testcase/false_test_secret.sign",
-              "testcase/test_public.pem", False),
+             ("testcase_script/test_secret.txt",
+              "testcase_script/false_test_secret.sign",
+              "testcase_script/test_public.pem", False),
 
-             ("testcase/test_secret.txt",
-              "testcase/test_secret.sign",
-              "testcase/false_test_public.pem", False)]
+             ("testcase_script/test_secret.txt",
+              "testcase_script/test_secret.sign",
+              "testcase_script/false_test_public.pem", False)]
 
 test_data_errors = [
-             ("testcase/test_secret_not_found.txt",
-              "testcase/test_secret.sign",
-              "testcase/test_public.pem",
+             ("testcase_script/test_secret_not_found.txt",
+              "testcase_script/test_secret.sign",
+              "testcase_script/test_public.pem",
               FileNotFoundError),
 
-             ("testcase/test_secret_not_found.txt",
-              "testcase/test_secret_not_found.sign",
-              "testcase/test_public.pem",
+             ("testcase_script/test_secret.txt",
+              "testcase_script/test_secret_not_found.sign",
+              "testcase_script/test_public.pem",
               FileNotFoundError),
 
-             ("testcase/test_secret.txt",
-              "testcase/test_secret.sign",
-              "testcase/test_public_not_found.pem",
+             ("testcase_script/test_secret.txt",
+              "testcase_script/test_secret.sign",
+              "testcase_script/test_public_not_found.pem",
               FileNotFoundError)
              ]
 

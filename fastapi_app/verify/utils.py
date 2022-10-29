@@ -33,7 +33,7 @@ def asymmetric_encryption(file, filename: str) -> str:
     return path
 
 
-async def signature_validator(file, signature,) -> bool:
+async def signature_validator(file, signature) -> bool:
     """
     Function for check digital signature
     :param file: File data submitted by the user

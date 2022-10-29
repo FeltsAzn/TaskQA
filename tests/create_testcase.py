@@ -5,13 +5,13 @@ from dotenv import load_dotenv
 import os
 
 
-dotenv_path = os.path.join(os.path.dirname(__file__), '../.env_test')  # Finding the path of the .env_test file
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env_test')  # Finding the path of the .env_test file
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 password = bytes(os.getenv("TEST_PASSWORD_FOR_PRIVATE_KEY"), "utf-8")  # Load test secret password on .env_test
 
 
-def create_test_keys() -> None:
+def create_test_keys(testcase_dir: str) -> None:
     """Function for create test public and private key"""
     private_key = ec.generate_private_key(ec.SECP256R1())
     serialized_private = private_key.private_bytes(
@@ -19,7 +19,7 @@ def create_test_keys() -> None:
         format=serialization.PrivateFormat.PKCS8,
         encryption_algorithm=serialization.BestAvailableEncryption(password)
     )
-    with open("testcase/test_private.pem", "wb+") as file:
+    with open(f"{testcase_dir}/test_private.pem", "wb+") as file:
         file.write(serialized_private)
 
     public_key = private_key.public_key()
@@ -27,20 +27,23 @@ def create_test_keys() -> None:
         encoding=serialization.Encoding.PEM,
         format=serialization.PublicFormat.SubjectPublicKeyInfo
     )
-    with open("testcase/test_public.pem", "wb+") as file:
+    with open(f"{testcase_dir}/test_public.pem", "wb+") as file:
         file.write(serialized_public)
 
 
-def create_test_signature() -> None:
+def create_test_signature(testcase_dir: str) -> None:
     """Function for create test digital signature with private key"""
-    with open("testcase/test_secret.txt", 'rb') as file:
+    with open(f"{testcase_dir}/test_secret.txt", 'rb') as file:
         data = file.read()
 
-    with open("testcase/test_private.pem", 'rb') as private_key:
+    with open(f"{testcase_dir}/test_private.pem", 'rb') as private_key:
         serialized_private = private_key.read()
     loaded_private_key = serialization.load_pem_private_key(serialized_private,
                                                             password=password)
 
     signature = loaded_private_key.sign(data, ec.ECDSA(hashes.SHA256()))
-    with open("testcase/test_secret.sign", 'wb') as file:
+    with open(f"{testcase_dir}/test_secret.sign", 'wb') as file:
         file.write(signature)
+
+
+
