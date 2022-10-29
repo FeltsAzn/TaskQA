@@ -1,4 +1,4 @@
 /venv
 /fastapi_app/verify/security/*
 /.idea
-/.env_test
+/tests/.env_test
