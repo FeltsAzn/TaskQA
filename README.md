@@ -3,7 +3,9 @@
 Для запуска скрипта нужно сделать следующее:
 Установить библиотеку cryptography для правильного запуска скрипта из терминала:
 
-> pip install cryptography
+```bash
+pip install cryptography
+```
 
 (так же, возможно, нужно поставить библиотеку click)
 
@@ -12,17 +14,20 @@
 
 Открываем терминал в папке скрипта и пишем:
 
-> python ecdsa_digital_signature.py --f <Исходный файл> --s <Цифровая подпись файла> --k <Публичный ключ>
-
+```bash
+python ecdsa_digital_signature.py --f <Исходный файл> --s <Цифровая подпись файла> --k <Публичный ключ>```
+```
 
 Так же можно написать:
-> python ecdsa_digital_signature.py
+```bash
+python ecdsa_digital_signature.py
 
->> ... Filename: <Исходный файл>
+... Filename: <Исходный файл>
 
->> ... Signature: <Цифровая подпись файла>
+... Signature: <Цифровая подпись файла>
 
->> ... Key: <Публичный ключ>
+... Key: <Публичный ключ>
+```
 
 Примечание: в папке "task" лежат тестовые данные. Чтобы их использовать нужно перед названием файла писать "task/",
 так как скрипт будет пытаться найти файлы в своей папке нахождения.
@@ -32,14 +37,21 @@
 Для запуска web приложения на FastAPI заходим в файл fastapi_app и стартуем файл start_app.py
 (для простого запуска лучшего всего открыть IDE и установить через pip файл requirements.txt)
 
+Либо находится в корневой папке и через терминал IDE (в моём случае Pycharm) и прописать:
+```bash
+uvicorn fastapi_app.start_app:app
+```
+
 После запуска файла start_app.py в строку вывода выйдет информация:
 
->INFO:     Will watch for changes in these directories: ['<Полный путь месторасположения приложения>']
->INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
->INFO:     Started reloader process [14854] using StatReload
->INFO:     Started server process [14856]
->INFO:     Waiting for application startup.
->INFO:     Application startup complete.
+```bash
+INFO:     Will watch for changes in these directories: ['<Полный путь месторасположения приложения>']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [14854] using StatReload
+INFO:     Started server process [14856]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+```
 
 Далее переходим в браузер и открываем http://127.0.0.1:8000/docs для удобного взаимодействия с API сервиса.
 
@@ -49,7 +61,7 @@
 
 ### Endpoint для подписи файла цифровой подписью
 
-Нажимаете "Try"
+Нажимаете **"Try"**
 
 Загружаете файл, который хотите подписать
 
