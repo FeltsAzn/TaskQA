@@ -1,48 +1,45 @@
-# Основное задание
+# The main task. 
 
-Для запуска скрипта нужно сделать следующее:
-Установить библиотеку cryptography для правильного запуска скрипта из терминала:
+
+To run the script you need to do the following:. Set the cryptography library to properly run the script from the terminal:
 
 ```bash
 pip install cryptography
 ```
 
-(так же, возможно, нужно поставить библиотеку click)
+(click library may also be needed). 
 
-Заходим в папку со скриптом и помещаем свои данные в папку со скриптом (скрипт будет искать файлы относительно папки
-самого скрипта).
+Enter the folder with the script and place your data in the folder with the script (the script will search files relative to the folder. the script itself). 
 
-Открываем терминал в папке скрипта и пишем:
-
+Open the terminal in the script folder and write:
 ```bash
-python ecdsa_digital_signature.py --f <Исходный файл> --s <Цифровая подпись файла> --k <Публичный ключ>```
+python ecdsa_digital_signature.py --f <source file> --s <digital signature of file> --k <Public key>```
 ```
 
-Так же можно написать:
+Also can write:
 ```bash
 python ecdsa_digital_signature.py
 
-... Filename: <Исходный файл>
+... Filename: <source file> 
 
-... Signature: <Цифровая подпись файла>
+... Signature: <digital signature of file> 
 
-... Key: <Публичный ключ>
+... Key: <Public key>
 ```
+Note: The "task" folder contains test data. To use it, you need to write "task/",
+before the file name. because the script will try to find files in its location folder.
 
-Примечание: в папке "task" лежат тестовые данные. Чтобы их использовать нужно перед названием файла писать "task/",
-так как скрипт будет пытаться найти файлы в своей папке нахождения.
+## An additional task 
 
-## Дополнительное задание
+To run the web application on FastAPI, go to the fastapi_app file and start the start_app.py. 
+(for easy start, open the IDE and install via pip file requirements.txt)
 
-Для запуска web приложения на FastAPI заходим в файл fastapi_app и стартуем файл start_app.py
-(для простого запуска лучшего всего открыть IDE и установить через pip файл requirements.txt)
-
-Либо находится в корневой папке и через терминал IDE (в моём случае Pycharm) и прописать:
+Or is located in the root folder and via the IDE terminal (in my case Pycharm) and write:
 ```bash
 uvicorn fastapi_app.start_app:app
 ```
 
-После запуска файла start_app.py в строку вывода выйдет информация:
+After file launch start_app.py in terminal will sent info: 
 
 ```bash
 INFO:     Will watch for changes in these directories: ['<Полный путь месторасположения приложения>']
@@ -53,17 +50,17 @@ INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 ```
 
-Далее переходим в браузер и открываем http://127.0.0.1:8000/docs для удобного взаимодействия с API сервиса.
+Next step is opening browser on http://127.0.0.1:8000/docs link and we can interact with API (FastAPI have a swagger for creation doc page).
 
-### Главная страница
+### Main page
 ![Alt text](https://github.com/FeltsAzn/TaskQA/blob/master/screenshots/main_page.png)
 
 
-### Endpoint для подписи файла цифровой подписью
+### Endpoint for make a digital signature on this file
 
-Нажимаете **"Try"**
+Push **"Try"**
 
-Загружаете файл, который хотите подписать
+Loading file, which you need signing
 
 
 ![Alt text](https://github.com/FeltsAzn/TaskQA/blob/master/screenshots/sign.png)
@@ -71,24 +68,24 @@ INFO:     Application startup complete.
 
 
 
-### Ответ сервера
+### Server response
 
-Cкачиваете цифровую подпись этого файла на компьютер (нажать Download file)
+Upload the digital signature of this file to your computer (click Download file)
 
 ![Alt text](https://github.com/FeltsAzn/TaskQA/blob/master/screenshots/sign_response.png)
 
 
-### Проверка цифровой подписи
+### Verify the digital signature
 
-Для проверки вашего файла и цифровой подписи на валидность нужно отправить исходный файл и его цифровую подпись (которую вы скачали с метода /sign).
+To verify your file and digital signature, you need to send the original file and its digital signature (which you have downloaded from /sign).
 
-!!! ВАЖНО: сначала загружается исходный файл, только потом цифровая подпись (так же стоит ограничение в 2 файла, чтобы происходила корректная проверка) 
+!!! IMPORTANT: first the original file is downloaded, then the digital signature (also there is a limit of 2 files for correct verification)
 
 ![Alt text](https://github.com/FeltsAzn/TaskQA/blob/master/screenshots/verify.png)
 
-### Ответ сервера
+### Server response
 
-Получаете информацию о валидности вашего файла и его цифровой подписи в ответе {resposne: ANSWER}
+Get information about the validity of your file and its digital signature in response {resposne: ANSWER}
 
 ![Alt text](https://github.com/FeltsAzn/TaskQA/blob/master/screenshots/verify_response.png)
 
